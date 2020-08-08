@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="random-input" class="form-control" type="text">
+                    <button onclick="generatePinClickHandler()" id="random-btn" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="input-box" class="form-control" type="text">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('btn7')" id="btn7" class="button">7</div>
+                              <div onclick="numberClick('btn8')" id="btn8" class="button">8</div>
+                              <div onclick="numberClick('btn9')" id="btn9" class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('btn4')" id="btn4" class="button">4</div>
+                              <div onclick="numberClick('btn5')" id="btn5" class="button">5</div>
+                              <div onclick="numberClick('btn6')" id="btn6" class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('btn1')" id="btn1" class="button">1</div>
+                              <div onclick="numberClick('btn2')" id="btn2" class="button">2</div>
+                              <div onclick="numberClick('btn3')" id="btn3" class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="singleClearHandler()" class="button"><</div>
+                                <div onclick="numberClick('btn0')" id="btn0" class="button">0</div>
+                                <div onclick="allClearHandler()" class="button">C</div>
+                            </div>
+                            <div>
+                                <button id="submitBtn" onclick="submitButtonHandler()" type="submit" class="submit-btn">Submit</button>
+                                <p id="try-left" class="action-left">3 try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p id="notMatch" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="match" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+
+    <script>
+        //notification display
+        document.getElementById('notMatch').style.display = 'none';
+        document.getElementById('match').style.display = 'none';
+        //generate random number
+        function generatePinClickHandler(){
+            document.getElementById('random-btn').textContent= 'Pin Generated'
+            const generateInput = document.getElementById('random-input')
+            const pinRandom = Math.floor(1000+ Math.random()*9000);
+            generateInput.value = pinRandom
+        }
+        //number click handler
+        function numberClick(btn) {
+            const button = document.getElementById(btn)
+            const btnNumber = parseInt(button.innerText)
+
+            const inputBox = document.getElementById('input-box').value
+            document.getElementById('input-box').value = inputBox + btnNumber;
+        }
+        //all clear Handler
+        function allClearHandler() {
+            document.getElementById('input-box').value = '' 
+        }
+        //single clear handler
+        function singleClearHandler() {
+            const inputBox = document.getElementById('input-box')
+            deleteLastInput = inputBox.value;
+            inputBox.value = deleteLastInput.substring(0, deleteLastInput.length - 1);
+        }
+        //Submit Button Handler
+        function submitButtonHandler() {
+            const inputBox = document.getElementById('input-box').value
+            const randomInputBox = document.getElementById('random-input').value
+
+            if (inputBox == '' || randomInputBox == '') {
+                alert('Your Input Field is Empty')
+            }else{
+                if (inputBox == randomInputBox) {
+                    document.getElementById('match').style.display = 'block';
+                    document.getElementById('input-box').value = ''
+                    document.getElementById('random-input').value = ''
+                    document.getElementById('random-btn').textContent = 'Pin Matched'
+                }else{
+                    document.getElementById('notMatch').style.display = 'block';
+                    document.getElementById('random-btn').style.backgroundColor = '#E81700'
+                    document.getElementById('random-btn').style.borderColor = '#a01c10'
+                    document.getElementById('random-btn').textContent = 'Wrong Pin'
+                    
+                }
+            submitBtnTime()
+            }
+        }
+        
+        let submitTimeOut = 0
+        const tryLeft = document.getElementById('try-left')
+
+        function submitBtnTime() {
+            submitTimeOut++
+            if (submitTimeOut == 1) {
+                tryLeft.innerText = '2 try left'
+            }
+            if (submitTimeOut == 2) {
+                tryLeft.innerText = '1 try letf'
+            }
+            if (submitTimeOut == 3) {
+                tryLeft.innerText = '❌ Your Time Is Over'
+                document.getElementById('submitBtn').style.display = 'none'
+            }
+        }
+
+    </script>
+
+</body>
+</html>
